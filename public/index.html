@@ -39,6 +39,22 @@
     height: 100vh;
   }
 
+  /* Orion animated icon styles */
+  .orion-icon {
+    animation: orionSpin 6s linear infinite;
+    filter: drop-shadow(0 0 4px rgba(16,163,127,0.5));
+  }
+
+  .orion-icon-large {
+    animation: orionSpin 6s linear infinite;
+    filter: drop-shadow(0 0 12px rgba(255,255,255,0.35));
+  }
+
+  @keyframes orionSpin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+
   .sidebar {
     width: 260px;
     background: var(--sidebar-bg);
@@ -181,7 +197,7 @@
   .model-selector {
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     padding: 6px 12px;
     border-radius: 8px;
     font-size: 0.85rem;
@@ -191,12 +207,12 @@
     user-select: none;
   }
 
-  .model-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
-    box-shadow: 0 0 6px var(--accent);
+  .model-icon-wrap {
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   #messages {
@@ -254,7 +270,7 @@
   }
 
   .msg-row.ai-row .msg-avatar {
-    background: var(--accent);
+    background: transparent;
     color: #fff;
     border-radius: 4px;
   }
@@ -439,20 +455,12 @@
   }
 
   .welcome-logo {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--accent);
+    width: 80px;
+    height: 80px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 4px;
-  }
-
-  .welcome-logo svg {
-    width: 30px;
-    height: 30px;
-    fill: white;
   }
 
   .welcome h1 {
@@ -653,7 +661,14 @@
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
         </button>
         <div class="model-selector">
-          <div class="model-dot"></div>
+          <div class="model-icon-wrap">
+            <svg class="orion-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22">
+              <circle cx="18" cy="18" r="16" stroke="white" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.6"/>
+              <circle cx="18" cy="18" r="9" stroke="white" stroke-width="1.5"/>
+              <circle cx="18" cy="2" r="2.5" fill="white"/>
+              <circle cx="18" cy="18" r="3" fill="white" opacity="0.9"/>
+            </svg>
+          </div>
           Orion
         </div>
       </div>
@@ -662,7 +677,12 @@
     <div id="messages">
       <div class="welcome" id="welcome">
         <div class="welcome-logo">
-          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <svg class="orion-icon-large" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="80" height="80">
+            <circle cx="18" cy="18" r="16" stroke="white" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.6"/>
+            <circle cx="18" cy="18" r="9" stroke="white" stroke-width="1.5"/>
+            <circle cx="18" cy="2" r="2.5" fill="white"/>
+            <circle cx="18" cy="18" r="3" fill="white" opacity="0.9"/>
+          </svg>
         </div>
         <h1>How can I help you today?</h1>
         <p class="welcome-sub">I'm Orion — I can help you write code, debug scripts, explain concepts, and much more.</p>
@@ -704,6 +724,8 @@
 </div>
 
 <script>
+  const ORION_AVATAR_SVG = `<svg class="orion-icon" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="28" height="28"><circle cx="18" cy="18" r="16" stroke="white" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.6"/><circle cx="18" cy="18" r="9" stroke="white" stroke-width="1.5"/><circle cx="18" cy="2" r="2.5" fill="white"/><circle cx="18" cy="18" r="3" fill="white" opacity="0.9"/></svg>`;
+
   const inputEl = document.getElementById('user-input');
   const sendBtn = document.getElementById('send-btn');
   const messagesEl = document.getElementById('messages');
@@ -1001,7 +1023,7 @@
     if (isUser) {
       avatar.textContent = 'U';
     } else {
-      avatar.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`;
+      avatar.innerHTML = ORION_AVATAR_SVG;
     }
 
     const msgBody = document.createElement('div');
@@ -1053,7 +1075,7 @@
 
     const avatar = document.createElement('div');
     avatar.className = 'msg-avatar';
-    avatar.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`;
+    avatar.innerHTML = ORION_AVATAR_SVG;
 
     const msgBody = document.createElement('div');
     msgBody.className = 'msg-body';
