@@ -34,10 +34,7 @@
     -webkit-font-smoothing: antialiased;
   }
 
-  .app {
-    display: flex;
-    height: 100vh;
-  }
+  .app { display: flex; height: 100vh; }
 
   .sidebar {
     width: 260px;
@@ -49,9 +46,7 @@
     transition: transform 0.3s ease;
   }
 
-  .sidebar-header {
-    padding: 12px;
-  }
+  .sidebar-header { padding: 12px; }
 
   .new-chat-btn {
     width: 100%;
@@ -79,7 +74,6 @@
     flex-direction: column;
     gap: 2px;
   }
-
   .sidebar-chats::-webkit-scrollbar { width: 4px; }
   .sidebar-chats::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 4px; }
 
@@ -159,11 +153,7 @@
     background: var(--bg);
   }
 
-  .topbar-left {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
+  .topbar-left { display: flex; align-items: center; gap: 10px; }
 
   .sidebar-toggle {
     display: none;
@@ -207,7 +197,6 @@
     min-height: 0;
     scroll-behavior: smooth;
   }
-
   #messages::-webkit-scrollbar { width: 6px; }
   #messages::-webkit-scrollbar-track { background: transparent; }
   #messages::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); border-radius: 6px; }
@@ -225,6 +214,13 @@
     from { opacity: 0; transform: translateY(4px); }
     to { opacity: 1; transform: translateY(0); }
   }
+
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  .orion-spin { animation: spin 8s linear infinite; }
 
   .msg-content {
     width: 100%;
@@ -254,7 +250,7 @@
   }
 
   .msg-row.ai-row .msg-avatar {
-    background: var(--accent);
+    background: transparent;
     color: #fff;
     border-radius: 4px;
   }
@@ -274,9 +270,7 @@
     color: var(--text);
   }
 
-  .msg-text {
-    word-break: break-word;
-  }
+  .msg-text { word-break: break-word; }
 
   .msg-text h1 { font-size: 1.5em; font-weight: 700; margin: 16px 0 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
   .msg-text h2 { font-size: 1.3em; font-weight: 600; margin: 14px 0 6px; color: var(--text); }
@@ -290,10 +284,7 @@
   .msg-text strong { font-weight: 700; color: #fff; }
   .msg-text em { font-style: italic; color: var(--text-secondary); }
 
-  .msg-text ul, .msg-text ol {
-    margin: 8px 0;
-    padding-left: 24px;
-  }
+  .msg-text ul, .msg-text ol { margin: 8px 0; padding-left: 24px; }
   .msg-text li { margin: 4px 0; }
   .msg-text li::marker { color: var(--text-muted); }
 
@@ -306,29 +297,12 @@
     color: var(--text-secondary);
   }
 
-  .msg-text hr {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 16px 0;
-  }
+  .msg-text hr { border: none; border-top: 1px solid var(--border); margin: 16px 0; }
 
-  .msg-text a {
-    color: var(--accent);
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
+  .msg-text a { color: var(--accent); text-decoration: underline; text-underline-offset: 2px; }
 
-  .msg-text table {
-    border-collapse: collapse;
-    margin: 10px 0;
-    width: 100%;
-    font-size: 0.85em;
-  }
-  .msg-text th, .msg-text td {
-    border: 1px solid var(--border);
-    padding: 6px 10px;
-    text-align: left;
-  }
+  .msg-text table { border-collapse: collapse; margin: 10px 0; width: 100%; font-size: 0.85em; }
+  .msg-text th, .msg-text td { border: 1px solid var(--border); padding: 6px 10px; text-align: left; }
   .msg-text th { background: var(--code-bg); font-weight: 600; }
 
   .msg-text code:not(.code-block-code) {
@@ -390,7 +364,6 @@
     background: transparent;
     border: none;
   }
-
   .code-block pre::-webkit-scrollbar { height: 4px; }
   .code-block pre::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.15); border-radius: 4px; }
 
@@ -404,12 +377,7 @@
     padding: 0;
   }
 
-  .typing-indicator {
-    display: flex;
-    gap: 4px;
-    align-items: center;
-    padding: 8px 0;
-  }
+  .typing-indicator { display: flex; gap: 4px; align-items: center; padding: 8px 0; }
 
   .typing-dot {
     width: 8px;
@@ -439,10 +407,8 @@
   }
 
   .welcome-logo {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: var(--accent);
+    width: 64px;
+    height: 64px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -450,16 +416,13 @@
   }
 
   .welcome-logo svg {
-    width: 30px;
-    height: 30px;
-    fill: white;
+    width: 64px;
+    height: 64px;
+    animation: spin 8s linear infinite;
+    filter: drop-shadow(0 0 8px rgba(255,255,255,0.2));
   }
 
-  .welcome h1 {
-    font-size: 1.6rem;
-    font-weight: 700;
-    color: var(--text);
-  }
+  .welcome h1 { font-size: 1.6rem; font-weight: 700; color: var(--text); }
 
   .welcome-sub {
     font-size: 0.9rem;
@@ -492,16 +455,8 @@
   }
   .prompt-card:hover { background: var(--surface); border-color: rgba(255,255,255,0.2); color: var(--text); }
 
-  .prompt-card-title {
-    font-weight: 600;
-    color: var(--text);
-    margin-bottom: 2px;
-    font-size: 0.84rem;
-  }
-  .prompt-card-desc {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-  }
+  .prompt-card-title { font-weight: 600; color: var(--text); margin-bottom: 2px; font-size: 0.84rem; }
+  .prompt-card-desc { font-size: 0.78rem; color: var(--text-muted); }
 
   .input-area {
     flex-shrink: 0;
@@ -511,10 +466,7 @@
     background: var(--bg);
   }
 
-  .input-container {
-    width: 100%;
-    max-width: var(--msg-max);
-  }
+  .input-container { width: 100%; max-width: var(--msg-max); }
 
   .input-box {
     display: flex;
@@ -662,7 +614,12 @@
     <div id="messages">
       <div class="welcome" id="welcome">
         <div class="welcome-logo">
-          <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+          <svg viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="18" cy="18" r="16" stroke="#fff" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.6"/>
+            <circle cx="18" cy="18" r="9" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="18" cy="2" r="2.5" fill="#fff"/>
+            <circle cx="18" cy="18" r="3" fill="#fff" opacity="0.9"/>
+          </svg>
         </div>
         <h1>How can I help you today?</h1>
         <p class="welcome-sub">I'm Orion — I can help you write code, debug scripts, explain concepts, and much more.</p>
@@ -704,25 +661,24 @@
 </div>
 
 <script>
-  const inputEl = document.getElementById('user-input');
-  const sendBtn = document.getElementById('send-btn');
-  const messagesEl = document.getElementById('messages');
-  const welcome = document.getElementById('welcome');
-  const sidebarChats = document.getElementById('sidebar-chats');
-  let history = [];
-  let busy = false;
-  let currentChatId = null;
+  var ORION_SVG = '<svg class="orion-spin" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg" width="22" height="22"><circle cx="18" cy="18" r="16" stroke="#fff" stroke-width="1.2" stroke-dasharray="4 3" opacity="0.6"/><circle cx="18" cy="18" r="9" stroke="#fff" stroke-width="1.5"/><circle cx="18" cy="2" r="2.5" fill="#fff"/><circle cx="18" cy="18" r="3" fill="#fff" opacity="0.9"/></svg>';
+
+  var inputEl = document.getElementById('user-input');
+  var sendBtn = document.getElementById('send-btn');
+  var messagesEl = document.getElementById('messages');
+  var welcome = document.getElementById('welcome');
+  var sidebarChats = document.getElementById('sidebar-chats');
+  var history = [];
+  var busy = false;
+  var currentChatId = null;
 
   function generateId() {
     return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
   }
 
   function getChatIndex() {
-    try {
-      return JSON.parse(sessionStorage.getItem('chatIndex') || '[]');
-    } catch {
-      return [];
-    }
+    try { return JSON.parse(sessionStorage.getItem('chatIndex') || '[]'); }
+    catch(e) { return []; }
   }
 
   function saveChatIndex(index) {
@@ -734,27 +690,24 @@
   }
 
   function loadChatMessages(chatId) {
-    try {
-      return JSON.parse(sessionStorage.getItem('chat_' + chatId) || '[]');
-    } catch {
-      return [];
-    }
+    try { return JSON.parse(sessionStorage.getItem('chat_' + chatId) || '[]'); }
+    catch(e) { return []; }
   }
 
   function deleteChatFromStorage(chatId) {
     sessionStorage.removeItem('chat_' + chatId);
-    let index = getChatIndex();
-    index = index.filter(c => c.id !== chatId);
+    var index = getChatIndex();
+    index = index.filter(function(c) { return c.id !== chatId; });
     saveChatIndex(index);
   }
 
   function saveCurrentChat() {
     if (!currentChatId || history.length === 0) return;
     saveChatMessages(currentChatId, history);
-    let index = getChatIndex();
-    let entry = index.find(c => c.id === currentChatId);
+    var index = getChatIndex();
+    var entry = index.find(function(c) { return c.id === currentChatId; });
     if (!entry) {
-      let title = history[0].content.substring(0, 40);
+      var title = history[0].content.substring(0, 40);
       if (history[0].content.length > 40) title += '...';
       index.unshift({ id: currentChatId, title: title });
       saveChatIndex(index);
@@ -763,28 +716,25 @@
 
   function renderSidebar() {
     sidebarChats.innerHTML = '';
-    let index = getChatIndex();
-    for (let i = 0; i < index.length; i++) {
-      let chat = index[i];
-      let item = document.createElement('div');
+    var index = getChatIndex();
+    for (var i = 0; i < index.length; i++) {
+      var chat = index[i];
+      var item = document.createElement('div');
       item.className = 'chat-item' + (chat.id === currentChatId ? ' active' : '');
       item.setAttribute('data-id', chat.id);
 
-      let titleSpan = document.createElement('span');
+      var titleSpan = document.createElement('span');
       titleSpan.className = 'chat-item-title';
       titleSpan.textContent = chat.title;
       titleSpan.onclick = (function(id) {
         return function() { loadChat(id); };
       })(chat.id);
 
-      let deleteBtn = document.createElement('button');
+      var deleteBtn = document.createElement('button');
       deleteBtn.className = 'chat-delete-btn';
       deleteBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
       deleteBtn.onclick = (function(id) {
-        return function(e) {
-          e.stopPropagation();
-          deleteChat(id);
-        };
+        return function(e) { e.stopPropagation(); deleteChat(id); };
       })(chat.id);
 
       item.appendChild(titleSpan);
@@ -797,19 +747,16 @@
     if (busy) return;
     currentChatId = chatId;
     history = loadChatMessages(chatId);
-
     messagesEl.innerHTML = '';
     messagesEl.appendChild(welcome);
-
     if (history.length === 0) {
       welcome.style.display = 'flex';
     } else {
       welcome.style.display = 'none';
-      for (let i = 0; i < history.length; i++) {
+      for (var i = 0; i < history.length; i++) {
         addMsg(history[i].role, history[i].content, true);
       }
     }
-
     renderSidebar();
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('sidebar-overlay').classList.remove('show');
@@ -839,13 +786,13 @@
     document.getElementById('sidebar-overlay').classList.remove('show');
   }
 
-  inputEl.addEventListener('input', () => {
+  inputEl.addEventListener('input', function() {
     inputEl.style.height = 'auto';
     inputEl.style.height = Math.min(inputEl.scrollHeight, 200) + 'px';
     sendBtn.classList.toggle('active', inputEl.value.trim().length > 0);
   });
 
-  inputEl.addEventListener('keydown', e => {
+  inputEl.addEventListener('keydown', function(e) {
     if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
   });
 
@@ -862,11 +809,11 @@
   }
 
   function parseMarkdown(raw) {
-    const codeBlocks = [];
-    let text = raw.replace(/```(\w*)\n?([\s\S]*?)```/g, (match, lang, code) => {
-      const idx = codeBlocks.length;
+    var codeBlocks = [];
+    var text = raw.replace(/```(\w*)\n?([\s\S]*?)```/g, function(match, lang, code) {
+      var idx = codeBlocks.length;
       codeBlocks.push({ lang: lang || '', code: code.replace(/\n$/, '') });
-      return `%%CODEBLOCK_${idx}%%`;
+      return '%%CODEBLOCK_' + idx + '%%';
     });
 
     text = escapeHtml(text);
@@ -887,9 +834,7 @@
     text = text.replace(/_(.+?)_/g, '<em>$1</em>');
 
     text = text.replace(/~~(.+?)~~/g, '<del>$1</del>');
-
     text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-
     text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
 
     text = text.replace(/^&gt;\s?(.+)$/gm, '<blockquote>$1</blockquote>');
@@ -899,26 +844,26 @@
     text = text.replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>');
 
     text = text.replace(/^[\s]*\d+\.\s+(.+)$/gm, '<oli>$1</oli>');
-    text = text.replace(/((?:<oli>.*<\/oli>\n?)+)/g, (match) => {
-      return '<ol>' + match.replace(/<\/?oli>/g, (t) => t.replace('oli', 'li')) + '</ol>';
+    text = text.replace(/((?:<oli>.*<\/oli>\n?)+)/g, function(match) {
+      return '<ol>' + match.replace(/<\/?oli>/g, function(t) { return t.replace('oli', 'li'); }) + '</ol>';
     });
 
-    text = text.replace(/^(\|.+\|)\n(\|[\s\-:|]+\|)\n((?:\|.+\|\n?)*)/gm, (match, header, sep, body) => {
-      const headers = header.split('|').filter(c => c.trim()).map(c => `<th>${c.trim()}</th>`).join('');
-      const rows = body.trim().split('\n').map(row => {
-        const cells = row.split('|').filter(c => c.trim()).map(c => `<td>${c.trim()}</td>`).join('');
-        return `<tr>${cells}</tr>`;
+    text = text.replace(/^(\|.+\|)\n(\|[\s\-:|]+\|)\n((?:\|.+\|\n?)*)/gm, function(match, header, sep, body) {
+      var headers = header.split('|').filter(function(c) { return c.trim(); }).map(function(c) { return '<th>' + c.trim() + '</th>'; }).join('');
+      var rows = body.trim().split('\n').map(function(row) {
+        var cells = row.split('|').filter(function(c) { return c.trim(); }).map(function(c) { return '<td>' + c.trim() + '</td>'; }).join('');
+        return '<tr>' + cells + '</tr>';
       }).join('');
-      return `<table><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>`;
+      return '<table><thead><tr>' + headers + '</tr></thead><tbody>' + rows + '</tbody></table>';
     });
 
-    const lines = text.split('\n');
-    let result = '';
-    let inParagraph = false;
+    var lines = text.split('\n');
+    var result = '';
+    var inParagraph = false;
 
-    for (let i = 0; i < lines.length; i++) {
-      const line = lines[i];
-      const isBlockEl = /^<(h[1-6]|ul|ol|li|blockquote|table|thead|tbody|tr|th|td|hr|pre|div)/.test(line.trim())
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      var isBlockEl = /^<(h[1-6]|ul|ol|li|blockquote|table|thead|tbody|tr|th|td|hr|pre|div)/.test(line.trim())
         || /%%CODEBLOCK_\d+%%/.test(line.trim());
 
       if (isBlockEl) {
@@ -935,83 +880,78 @@
     }
     if (inParagraph) result += '</p>';
 
-    result = result.replace(/%%CODEBLOCK_(\d+)%%/g, (_, idx) => {
-      const block = codeBlocks[parseInt(idx)];
-      const langLabel = block.lang || 'code';
-      const codeId = 'codeblock-' + Date.now() + '-' + idx;
-      return `<div class="code-block">
-        <div class="code-block-header">
-          <span class="code-block-lang">${escapeHtml(langLabel)}</span>
-          <button class="code-copy-btn" onclick="copyCodeBlock(this, '${codeId}')">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-            Copy code
-          </button>
-        </div>
-        <pre><code class="code-block-code" id="${codeId}">${escapeHtml(block.code)}</code></pre>
-      </div>`;
+    result = result.replace(/%%CODEBLOCK_(\d+)%%/g, function(_, idx) {
+      var block = codeBlocks[parseInt(idx)];
+      var langLabel = block.lang || 'code';
+      var codeId = 'codeblock-' + Date.now() + '-' + idx;
+      return '<div class="code-block">' +
+        '<div class="code-block-header">' +
+          '<span class="code-block-lang">' + escapeHtml(langLabel) + '</span>' +
+          '<button class="code-copy-btn" onclick="copyCodeBlock(this, \'' + codeId + '\')">' +
+            '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>' +
+            ' Copy code' +
+          '</button>' +
+        '</div>' +
+        '<pre><code class="code-block-code" id="' + codeId + '">' + escapeHtml(block.code) + '</code></pre>' +
+      '</div>';
     });
 
     return result;
   }
 
   function escapeHtml(str) {
-    return str
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;');
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
   }
 
   function copyCodeBlock(btn, codeId) {
-    const codeEl = document.getElementById(codeId);
+    var codeEl = document.getElementById(codeId);
     if (!codeEl) return;
-    const text = codeEl.textContent;
-    navigator.clipboard.writeText(text).then(() => {
+    navigator.clipboard.writeText(codeEl.textContent).then(function() {
       btn.classList.add('copied');
-      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
-      setTimeout(() => {
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!';
+      setTimeout(function() {
         btn.classList.remove('copied');
-        btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy code`;
+        btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg> Copy code';
       }, 2000);
     });
   }
 
   function copyFullMessage(btn) {
-    const msgText = btn.closest('.msg-body').querySelector('.msg-text');
-    const text = msgText.innerText || msgText.textContent;
-    navigator.clipboard.writeText(text).then(() => {
-      const origHTML = btn.innerHTML;
-      btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>`;
-      setTimeout(() => { btn.innerHTML = origHTML; }, 1500);
+    var msgText = btn.closest('.msg-body').querySelector('.msg-text');
+    var text = msgText.innerText || msgText.textContent;
+    navigator.clipboard.writeText(text).then(function() {
+      var origHTML = btn.innerHTML;
+      btn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>';
+      setTimeout(function() { btn.innerHTML = origHTML; }, 1500);
     });
   }
 
   function addMsg(role, content, skipHistory) {
     if (welcome.parentNode) welcome.style.display = 'none';
 
-    const isUser = role === 'user';
-    const row = document.createElement('div');
-    row.className = `msg-row ${isUser ? 'user-row' : 'ai-row'}`;
+    var isUser = role === 'user';
+    var row = document.createElement('div');
+    row.className = 'msg-row ' + (isUser ? 'user-row' : 'ai-row');
 
-    const msgContent = document.createElement('div');
+    var msgContent = document.createElement('div');
     msgContent.className = 'msg-content';
 
-    const avatar = document.createElement('div');
+    var avatar = document.createElement('div');
     avatar.className = 'msg-avatar';
     if (isUser) {
       avatar.textContent = 'U';
     } else {
-      avatar.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`;
+      avatar.innerHTML = ORION_SVG;
     }
 
-    const msgBody = document.createElement('div');
+    var msgBody = document.createElement('div');
     msgBody.className = 'msg-body';
 
-    const sender = document.createElement('div');
+    var sender = document.createElement('div');
     sender.className = 'msg-sender';
     sender.textContent = isUser ? 'You' : 'Orion';
 
-    const msgText = document.createElement('div');
+    var msgText = document.createElement('div');
     msgText.className = 'msg-text';
 
     if (isUser) {
@@ -1024,13 +964,9 @@
     msgBody.appendChild(msgText);
 
     if (!isUser) {
-      const actions = document.createElement('div');
+      var actions = document.createElement('div');
       actions.className = 'msg-actions';
-      actions.innerHTML = `
-        <button class="msg-action-btn" onclick="copyFullMessage(this)" title="Copy">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-        </button>
-      `;
+      actions.innerHTML = '<button class="msg-action-btn" onclick="copyFullMessage(this)" title="Copy"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>';
       msgBody.appendChild(actions);
     }
 
@@ -1044,27 +980,27 @@
 
   function addTyping() {
     if (welcome.parentNode) welcome.style.display = 'none';
-    const row = document.createElement('div');
+    var row = document.createElement('div');
     row.className = 'msg-row ai-row';
     row.id = '__typing__';
 
-    const msgContent = document.createElement('div');
+    var msgContent = document.createElement('div');
     msgContent.className = 'msg-content';
 
-    const avatar = document.createElement('div');
+    var avatar = document.createElement('div');
     avatar.className = 'msg-avatar';
-    avatar.innerHTML = `<svg viewBox="0 0 24 24" width="16" height="16" fill="white"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>`;
+    avatar.innerHTML = ORION_SVG;
 
-    const msgBody = document.createElement('div');
+    var msgBody = document.createElement('div');
     msgBody.className = 'msg-body';
 
-    const sender = document.createElement('div');
+    var sender = document.createElement('div');
     sender.className = 'msg-sender';
     sender.textContent = 'Orion';
 
-    const typing = document.createElement('div');
+    var typing = document.createElement('div');
     typing.className = 'typing-indicator';
-    typing.innerHTML = `<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>`;
+    typing.innerHTML = '<div class="typing-dot"></div><div class="typing-dot"></div><div class="typing-dot"></div>';
 
     msgBody.appendChild(sender);
     msgBody.appendChild(typing);
@@ -1076,46 +1012,12 @@
   }
 
   function removeTyping() {
-    const el = document.getElementById('__typing__');
+    var el = document.getElementById('__typing__');
     if (el) el.remove();
   }
 
-  function buildPrompt(newUserMsg) {
-    const systemInstruction = `You are Orion, an AI assistant. Always respond in plain text with markdown formatting. Never respond with raw JSON. Use headings (##), bold (**text**), code blocks (\`\`\`), inline code (\`code\`), lists, and other markdown as appropriate. Be helpful, clear, and concise.`;
-
-    if (history.length <= 1) {
-      return systemInstruction + '\n\nUser: ' + newUserMsg;
-    }
-
-    let prompt = systemInstruction + '\n\nThe following is a conversation. Respond only to the last user message. Do NOT include "user:" or "assistant:" prefixes.\n\n';
-
-    let recentHistory = history;
-    let maxContext = 20;
-    if (recentHistory.length > maxContext) {
-      recentHistory = recentHistory.slice(recentHistory.length - maxContext);
-    }
-
-    for (const msg of recentHistory) {
-      let content = msg.content;
-      if (content.length > 2000) {
-        content = content.substring(0, 2000) + '... [truncated]';
-      }
-      prompt += `${msg.role}: ${content}\n`;
-    }
-    return prompt;
-  }
-
-  function isJsonString(str) {
-    try {
-      const parsed = JSON.parse(str);
-      return typeof parsed === 'object' && parsed !== null;
-    } catch {
-      return false;
-    }
-  }
-
   async function sendMessage() {
-    const text = inputEl.value.trim();
+    var text = inputEl.value.trim();
     if (!text || busy) return;
     busy = true;
     sendBtn.disabled = true;
@@ -1132,45 +1034,18 @@
     saveCurrentChat();
     renderSidebar();
 
-    const fullPrompt = buildPrompt(text);
     addTyping();
 
     try {
-      const resp = await fetch('/api', {
+      var resp = await fetch('/api', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: fullPrompt })
+        body: JSON.stringify({ messages: history })
       });
 
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      let reply = await resp.text();
+      if (!resp.ok) throw new Error('HTTP ' + resp.status);
+      var reply = await resp.text();
       reply = reply.trim();
-
-      if (isJsonString(reply)) {
-        try {
-          const parsed = JSON.parse(reply);
-          const extracted = parsed.response || parsed.text || parsed.message || parsed.content || parsed.output || parsed.answer || parsed.result;
-          if (typeof extracted === 'string') {
-            reply = extracted;
-          } else {
-            const retryResp = await fetch('/api', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ prompt: fullPrompt + '\n\nIMPORTANT: Respond in plain text with markdown formatting. Do NOT respond with JSON. Give your response without any JSON wrapping.' })
-            });
-            if (retryResp.ok) {
-              let retryReply = await retryResp.text();
-              retryReply = retryReply.trim();
-              if (isJsonString(retryReply)) {
-                const rp = JSON.parse(retryReply);
-                reply = rp.response || rp.text || rp.message || rp.content || rp.output || rp.answer || rp.result || JSON.stringify(rp, null, 2);
-              } else {
-                reply = retryReply;
-              }
-            }
-          }
-        } catch (e) {}
-      }
 
       removeTyping();
 
@@ -1183,7 +1058,7 @@
       saveCurrentChat();
     } catch (err) {
       removeTyping();
-      addMsg('assistant', `⚠ **Error:** ${err.message}\n\nMake sure you have internet access and try again.`, true);
+      addMsg('assistant', '⚠ **Error:** ' + err.message + '\n\nMake sure you have internet access and try again.', true);
     } finally {
       busy = false;
       sendBtn.disabled = false;
@@ -1194,4 +1069,4 @@
   renderSidebar();
 </script>
 </body>
-          </html>
+            </html>
