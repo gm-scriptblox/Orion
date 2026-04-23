@@ -39,7 +39,6 @@
     height: 100vh;
   }
 
-  /* Sidebar */
   .sidebar {
     width: 260px;
     background: var(--sidebar-bg);
@@ -94,9 +93,34 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 4px;
   }
   .chat-item:hover { background: var(--surface); }
   .chat-item.active { background: var(--surface); color: var(--text); }
+
+  .chat-item-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    flex: 1;
+  }
+
+  .chat-delete-btn {
+    display: none;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    flex-shrink: 0;
+    transition: color 0.15s;
+  }
+  .chat-delete-btn:hover { color: #e06c75; }
+  .chat-item:hover .chat-delete-btn { display: flex; }
 
   .sidebar-footer {
     padding: 12px;
@@ -116,7 +140,6 @@
   }
   .sidebar-footer-item:hover { background: var(--surface); }
 
-  /* Main area */
   .main {
     flex: 1;
     display: flex;
@@ -125,7 +148,6 @@
     position: relative;
   }
 
-  /* Top bar */
   .topbar {
     height: 48px;
     display: flex;
@@ -177,7 +199,6 @@
     box-shadow: 0 0 6px var(--accent);
   }
 
-  /* Messages */
   #messages {
     flex: 1;
     overflow-y: auto;
@@ -257,7 +278,6 @@
     word-break: break-word;
   }
 
-  /* Markdown rendering styles */
   .msg-text h1 { font-size: 1.5em; font-weight: 700; margin: 16px 0 8px; border-bottom: 1px solid var(--border); padding-bottom: 6px; }
   .msg-text h2 { font-size: 1.3em; font-weight: 600; margin: 14px 0 6px; color: var(--text); }
   .msg-text h3 { font-size: 1.1em; font-weight: 600; margin: 12px 0 4px; color: var(--text); }
@@ -311,7 +331,6 @@
   }
   .msg-text th { background: var(--code-bg); font-weight: 600; }
 
-  /* Inline code */
   .msg-text code:not(.code-block-code) {
     background: var(--code-bg);
     border: 1px solid rgba(255,255,255,0.1);
@@ -322,7 +341,6 @@
     color: #e06c75;
   }
 
-  /* Code blocks */
   .code-block {
     margin: 12px 0;
     border-radius: 8px;
@@ -386,7 +404,6 @@
     padding: 0;
   }
 
-  /* Typing indicator */
   .typing-indicator {
     display: flex;
     gap: 4px;
@@ -409,7 +426,6 @@
     30% { opacity: 1; transform: scale(1); }
   }
 
-  /* Welcome screen */
   .welcome {
     display: flex;
     flex-direction: column;
@@ -487,7 +503,6 @@
     color: var(--text-muted);
   }
 
-  /* Input area */
   .input-area {
     flex-shrink: 0;
     padding: 12px 24px 20px;
@@ -560,7 +575,6 @@
     text-align: center;
   }
 
-  /* Action bar under AI messages */
   .msg-actions {
     display: flex;
     gap: 4px;
@@ -587,7 +601,6 @@
   .msg-action-btn:hover { color: var(--text); background: rgba(255,255,255,0.06); }
   .msg-action-btn svg { width: 14px; height: 14px; }
 
-  /* Responsive */
   @media (max-width: 768px) {
     .sidebar {
       position: fixed;
@@ -602,7 +615,6 @@
     .input-area { padding: 10px 14px 16px; }
   }
 
-  /* Overlay for mobile sidebar */
   .sidebar-overlay {
     display: none;
     position: fixed;
@@ -620,14 +632,12 @@
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
-      <button class="new-chat-btn" onclick="clearChat()">
+      <button class="new-chat-btn" onclick="newChat()">
         <svg viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
         New chat
       </button>
     </div>
-    <div class="sidebar-chats" id="sidebar-chats">
-      <!-- Chat history items go here -->
-    </div>
+    <div class="sidebar-chats" id="sidebar-chats"></div>
     <div class="sidebar-footer">
       <div class="sidebar-footer-item">
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
@@ -701,9 +711,134 @@
   const sidebarChats = document.getElementById('sidebar-chats');
   let history = [];
   let busy = false;
-  let chatTitle = '';
+  let currentChatId = null;
 
-  // Auto-resize textarea
+  function generateId() {
+    return Date.now().toString(36) + Math.random().toString(36).substring(2, 8);
+  }
+
+  function getChatIndex() {
+    try {
+      return JSON.parse(sessionStorage.getItem('chatIndex') || '[]');
+    } catch {
+      return [];
+    }
+  }
+
+  function saveChatIndex(index) {
+    sessionStorage.setItem('chatIndex', JSON.stringify(index));
+  }
+
+  function saveChatMessages(chatId, messages) {
+    sessionStorage.setItem('chat_' + chatId, JSON.stringify(messages));
+  }
+
+  function loadChatMessages(chatId) {
+    try {
+      return JSON.parse(sessionStorage.getItem('chat_' + chatId) || '[]');
+    } catch {
+      return [];
+    }
+  }
+
+  function deleteChatFromStorage(chatId) {
+    sessionStorage.removeItem('chat_' + chatId);
+    let index = getChatIndex();
+    index = index.filter(c => c.id !== chatId);
+    saveChatIndex(index);
+  }
+
+  function saveCurrentChat() {
+    if (!currentChatId || history.length === 0) return;
+    saveChatMessages(currentChatId, history);
+    let index = getChatIndex();
+    let entry = index.find(c => c.id === currentChatId);
+    if (!entry) {
+      let title = history[0].content.substring(0, 40);
+      if (history[0].content.length > 40) title += '...';
+      index.unshift({ id: currentChatId, title: title });
+      saveChatIndex(index);
+    }
+  }
+
+  function renderSidebar() {
+    sidebarChats.innerHTML = '';
+    let index = getChatIndex();
+    for (let i = 0; i < index.length; i++) {
+      let chat = index[i];
+      let item = document.createElement('div');
+      item.className = 'chat-item' + (chat.id === currentChatId ? ' active' : '');
+      item.setAttribute('data-id', chat.id);
+
+      let titleSpan = document.createElement('span');
+      titleSpan.className = 'chat-item-title';
+      titleSpan.textContent = chat.title;
+      titleSpan.onclick = (function(id) {
+        return function() { loadChat(id); };
+      })(chat.id);
+
+      let deleteBtn = document.createElement('button');
+      deleteBtn.className = 'chat-delete-btn';
+      deleteBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>';
+      deleteBtn.onclick = (function(id) {
+        return function(e) {
+          e.stopPropagation();
+          deleteChat(id);
+        };
+      })(chat.id);
+
+      item.appendChild(titleSpan);
+      item.appendChild(deleteBtn);
+      sidebarChats.appendChild(item);
+    }
+  }
+
+  function loadChat(chatId) {
+    if (busy) return;
+    currentChatId = chatId;
+    history = loadChatMessages(chatId);
+
+    messagesEl.innerHTML = '';
+    messagesEl.appendChild(welcome);
+
+    if (history.length === 0) {
+      welcome.style.display = 'flex';
+    } else {
+      welcome.style.display = 'none';
+      for (let i = 0; i < history.length; i++) {
+        addMsg(history[i].role, history[i].content, true);
+      }
+    }
+
+    renderSidebar();
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('show');
+  }
+
+  function deleteChat(chatId) {
+    deleteChatFromStorage(chatId);
+    if (chatId === currentChatId) {
+      currentChatId = null;
+      history = [];
+      messagesEl.innerHTML = '';
+      messagesEl.appendChild(welcome);
+      welcome.style.display = 'flex';
+    }
+    renderSidebar();
+  }
+
+  function newChat() {
+    if (busy) return;
+    currentChatId = null;
+    history = [];
+    messagesEl.innerHTML = '';
+    messagesEl.appendChild(welcome);
+    welcome.style.display = 'flex';
+    renderSidebar();
+    document.getElementById('sidebar').classList.remove('open');
+    document.getElementById('sidebar-overlay').classList.remove('show');
+  }
+
   inputEl.addEventListener('input', () => {
     inputEl.style.height = 'auto';
     inputEl.style.height = Math.min(inputEl.scrollHeight, 200) + 'px';
@@ -726,22 +861,7 @@
     sendMessage();
   }
 
-  function clearChat() {
-    history = [];
-    chatTitle = '';
-    messagesEl.innerHTML = '';
-    messagesEl.appendChild(welcome);
-    welcome.style.display = 'flex';
-    // Close sidebar on mobile
-    document.getElementById('sidebar').classList.remove('open');
-    document.getElementById('sidebar-overlay').classList.remove('show');
-  }
-
-  // --- Markdown parser ---
   function parseMarkdown(raw) {
-    // We'll do multi-pass parsing
-
-    // First, extract code blocks to protect them
     const codeBlocks = [];
     let text = raw.replace(/```(\w*)\n?([\s\S]*?)```/g, (match, lang, code) => {
       const idx = codeBlocks.length;
@@ -749,10 +869,8 @@
       return `%%CODEBLOCK_${idx}%%`;
     });
 
-    // Escape HTML
     text = escapeHtml(text);
 
-    // Headings
     text = text.replace(/^######\s+(.+)$/gm, '<h6>$1</h6>');
     text = text.replace(/^#####\s+(.+)$/gm, '<h5>$1</h5>');
     text = text.replace(/^####\s+(.+)$/gm, '<h4>$1</h4>');
@@ -760,41 +878,31 @@
     text = text.replace(/^##\s+(.+)$/gm, '<h2>$1</h2>');
     text = text.replace(/^#\s+(.+)$/gm, '<h1>$1</h1>');
 
-    // Horizontal rules
     text = text.replace(/^(---|\*\*\*|___)$/gm, '<hr>');
 
-    // Bold + italic
     text = text.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
     text = text.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
     text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
     text = text.replace(/__(.+?)__/g, '<strong>$1</strong>');
     text = text.replace(/_(.+?)_/g, '<em>$1</em>');
 
-    // Strikethrough
     text = text.replace(/~~(.+?)~~/g, '<del>$1</del>');
 
-    // Inline code (after escaping HTML)
     text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
 
-    // Links
     text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
 
-    // Blockquotes
     text = text.replace(/^&gt;\s?(.+)$/gm, '<blockquote>$1</blockquote>');
-    // Merge consecutive blockquotes
     text = text.replace(/<\/blockquote>\n<blockquote>/g, '\n');
 
-    // Unordered lists
     text = text.replace(/^[\s]*[-*+]\s+(.+)$/gm, '<li>$1</li>');
     text = text.replace(/((?:<li>.*<\/li>\n?)+)/g, '<ul>$1</ul>');
 
-    // Ordered lists
     text = text.replace(/^[\s]*\d+\.\s+(.+)$/gm, '<oli>$1</oli>');
     text = text.replace(/((?:<oli>.*<\/oli>\n?)+)/g, (match) => {
       return '<ol>' + match.replace(/<\/?oli>/g, (t) => t.replace('oli', 'li')) + '</ol>';
     });
 
-    // Tables
     text = text.replace(/^(\|.+\|)\n(\|[\s\-:|]+\|)\n((?:\|.+\|\n?)*)/gm, (match, header, sep, body) => {
       const headers = header.split('|').filter(c => c.trim()).map(c => `<th>${c.trim()}</th>`).join('');
       const rows = body.trim().split('\n').map(row => {
@@ -804,7 +912,6 @@
       return `<table><thead><tr>${headers}</tr></thead><tbody>${rows}</tbody></table>`;
     });
 
-    // Paragraphs: wrap remaining text blocks
     const lines = text.split('\n');
     let result = '';
     let inParagraph = false;
@@ -828,7 +935,6 @@
     }
     if (inParagraph) result += '</p>';
 
-    // Re-insert code blocks
     result = result.replace(/%%CODEBLOCK_(\d+)%%/g, (_, idx) => {
       const block = codeBlocks[parseInt(idx)];
       const langLabel = block.lang || 'code';
@@ -880,8 +986,7 @@
     });
   }
 
-  // --- Message rendering ---
-  function addMsg(role, content) {
+  function addMsg(role, content, skipHistory) {
     if (welcome.parentNode) welcome.style.display = 'none';
 
     const isUser = role === 'user';
@@ -918,7 +1023,6 @@
     msgBody.appendChild(sender);
     msgBody.appendChild(msgText);
 
-    // Add action buttons for AI messages
     if (!isUser) {
       const actions = document.createElement('div');
       actions.className = 'msg-actions';
@@ -977,32 +1081,28 @@
   }
 
   function buildPrompt(newUserMsg) {
-    history.push({ role: 'user', content: newUserMsg });
-
     const systemInstruction = `You are Orion, an AI assistant. Always respond in plain text with markdown formatting. Never respond with raw JSON. Use headings (##), bold (**text**), code blocks (\`\`\`), inline code (\`code\`), lists, and other markdown as appropriate. Be helpful, clear, and concise.`;
 
-    if (history.length === 1) {
-      return systemInstruction + '\n\nUser: ' + history[0].content;
+    if (history.length <= 1) {
+      return systemInstruction + '\n\nUser: ' + newUserMsg;
     }
 
     let prompt = systemInstruction + '\n\nThe following is a conversation. Respond only to the last user message. Do NOT include "user:" or "assistant:" prefixes.\n\n';
-    for (const msg of history) {
-      prompt += `${msg.role}: ${msg.content}\n`;
+
+    let recentHistory = history;
+    let maxContext = 20;
+    if (recentHistory.length > maxContext) {
+      recentHistory = recentHistory.slice(recentHistory.length - maxContext);
+    }
+
+    for (const msg of recentHistory) {
+      let content = msg.content;
+      if (content.length > 2000) {
+        content = content.substring(0, 2000) + '... [truncated]';
+      }
+      prompt += `${msg.role}: ${content}\n`;
     }
     return prompt;
-  }
-
-  function addChatToSidebar(title) {
-    // Remove 'active' from all items
-    document.querySelectorAll('.chat-item').forEach(el => el.classList.remove('active'));
-    const item = document.createElement('div');
-    item.className = 'chat-item active';
-    item.textContent = title;
-    if (sidebarChats.firstChild) {
-      sidebarChats.insertBefore(item, sidebarChats.firstChild);
-    } else {
-      sidebarChats.appendChild(item);
-    }
   }
 
   function isJsonString(str) {
@@ -1023,13 +1123,14 @@
     inputEl.value = '';
     inputEl.style.height = 'auto';
 
-    addMsg('user', text);
-
-    // Set chat title from first message
-    if (!chatTitle) {
-      chatTitle = text.substring(0, 40) + (text.length > 40 ? '...' : '');
-      addChatToSidebar(chatTitle);
+    if (!currentChatId) {
+      currentChatId = generateId();
     }
+
+    history.push({ role: 'user', content: text });
+    addMsg('user', text, true);
+    saveCurrentChat();
+    renderSidebar();
 
     const fullPrompt = buildPrompt(text);
     addTyping();
@@ -1045,17 +1146,13 @@
       let reply = await resp.text();
       reply = reply.trim();
 
-      // Check if the response is JSON — if so, reprompt
       if (isJsonString(reply)) {
-        // Try to extract text from JSON
         try {
           const parsed = JSON.parse(reply);
-          // Common patterns: parsed.response, parsed.text, parsed.message, parsed.content, parsed.output
           const extracted = parsed.response || parsed.text || parsed.message || parsed.content || parsed.output || parsed.answer || parsed.result;
           if (typeof extracted === 'string') {
             reply = extracted;
           } else {
-            // Reprompt: ask for plain text
             const retryResp = await fetch('/api', {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
@@ -1072,29 +1169,29 @@
               }
             }
           }
-        } catch (e) {
-          // If all fails, just display as text
-        }
+        } catch (e) {}
       }
 
       removeTyping();
 
-      // Clean up common prefixes
       if (reply.toLowerCase().startsWith('assistant:')) {
         reply = reply.substring('assistant:'.length).trim();
       }
 
       history.push({ role: 'assistant', content: reply });
-      addMsg('assistant', reply);
+      addMsg('assistant', reply, true);
+      saveCurrentChat();
     } catch (err) {
       removeTyping();
-      addMsg('assistant', `⚠ **Error:** ${err.message}\n\nMake sure you have internet access and try again.`);
+      addMsg('assistant', `⚠ **Error:** ${err.message}\n\nMake sure you have internet access and try again.`, true);
     } finally {
       busy = false;
       sendBtn.disabled = false;
       inputEl.focus();
     }
   }
+
+  renderSidebar();
 </script>
 </body>
-</html>
+          </html>
