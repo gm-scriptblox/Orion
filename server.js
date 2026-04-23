@@ -67,6 +67,7 @@ async function askAI(userMessage) {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       model: "openai",
+      jsonMode: True,
       messages: [
         { role: "system", content: SYSTEM },
         { role: "user", content: userMessage }
