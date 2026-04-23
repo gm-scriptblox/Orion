@@ -39,7 +39,6 @@
     height: 100vh;
   }
 
-  /* Orion animated icon styles */
   .orion-icon {
     animation: orionSpin 6s linear infinite;
     filter: drop-shadow(0 0 4px rgba(16,163,127,0.5));
@@ -819,10 +818,8 @@
     if (busy) return;
     currentChatId = chatId;
     history = loadChatMessages(chatId);
-
     messagesEl.innerHTML = '';
     messagesEl.appendChild(welcome);
-
     if (history.length === 0) {
       welcome.style.display = 'flex';
     } else {
@@ -831,7 +828,6 @@
         addMsg(history[i].role, history[i].content, true);
       }
     }
-
     renderSidebar();
     document.getElementById('sidebar').classList.remove('open');
     document.getElementById('sidebar-overlay').classList.remove('show');
@@ -907,11 +903,8 @@
     text = text.replace(/\*(.+?)\*/g, '<em>$1</em>');
     text = text.replace(/__(.+?)__/g, '<strong>$1</strong>');
     text = text.replace(/_(.+?)_/g, '<em>$1</em>');
-
     text = text.replace(/~~(.+?)~~/g, '<del>$1</del>');
-
     text = text.replace(/`([^`]+)`/g, '<code>$1</code>');
-
     text = text.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
 
     text = text.replace(/^&gt;\s?(.+)$/gm, '<blockquote>$1</blockquote>');
@@ -987,8 +980,7 @@
   function copyCodeBlock(btn, codeId) {
     const codeEl = document.getElementById(codeId);
     if (!codeEl) return;
-    const text = codeEl.textContent;
-    navigator.clipboard.writeText(text).then(() => {
+    navigator.clipboard.writeText(codeEl.textContent).then(() => {
       btn.classList.add('copied');
       btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Copied!`;
       setTimeout(() => {
@@ -1006,6 +998,29 @@
       btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="20 6 9 17 4 12"/></svg>`;
       setTimeout(() => { btn.innerHTML = origHTML; }, 1500);
     });
+  }
+
+  function extractReply(data) {
+    if (typeof data === 'string') {
+      try {
+        const parsed = JSON.parse(data);
+        return extractReply(parsed);
+      } catch {
+        return data.trim();
+      }
+    }
+
+    if (typeof data === 'object' && data !== null) {
+      const keys = ['content', 'response', 'text', 'message', 'output', 'answer', 'result'];
+      for (const key of keys) {
+        if (typeof data[key] === 'string' && data[key].trim()) {
+          return data[key].trim();
+        }
+      }
+      return JSON.stringify(data);
+    }
+
+    return String(data).trim();
   }
 
   function addMsg(role, content, skipHistory) {
@@ -1102,38 +1117,22 @@
     if (el) el.remove();
   }
 
-  function buildPrompt(newUserMsg) {
-    const systemInstruction = `You are Orion, an AI assistant. Always respond in plain text with markdown formatting. Never respond with raw JSON. Use headings (##), bold (**text**), code blocks (\`\`\`), inline code (\`code\`), lists, and other markdown as appropriate. Be helpful, clear, and concise.`;
-
-    if (history.length <= 1) {
-      return systemInstruction + '\n\nUser: ' + newUserMsg;
-    }
-
-    let prompt = systemInstruction + '\n\nThe following is a conversation. Respond only to the last user message. Do NOT include "user:" or "assistant:" prefixes.\n\n';
+  function buildConversationPrompt(newUserMsg) {
+    let prompt = '';
 
     let recentHistory = history;
-    let maxContext = 20;
+    const maxContext = 20;
     if (recentHistory.length > maxContext) {
       recentHistory = recentHistory.slice(recentHistory.length - maxContext);
     }
 
     for (const msg of recentHistory) {
       let content = msg.content;
-      if (content.length > 2000) {
-        content = content.substring(0, 2000) + '... [truncated]';
-      }
-      prompt += `${msg.role}: ${content}\n`;
+      if (content.length > 2000) content = content.substring(0, 2000) + '... [truncated]';
+      prompt += (msg.role === 'user' ? 'User: ' : 'Orion: ') + content + '\n\n';
     }
-    return prompt;
-  }
 
-  function isJsonString(str) {
-    try {
-      const parsed = JSON.parse(str);
-      return typeof parsed === 'object' && parsed !== null;
-    } catch {
-      return false;
-    }
+    return prompt.trim();
   }
 
   async function sendMessage() {
@@ -1154,58 +1153,40 @@
     saveCurrentChat();
     renderSidebar();
 
-    const fullPrompt = buildPrompt(text);
+    const conversationContext = buildConversationPrompt(text);
     addTyping();
 
     try {
       const resp = await fetch('/api', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt: fullPrompt })
+        body: JSON.stringify({ prompt: conversationContext || text })
       });
 
-      if (!resp.ok) throw new Error(`HTTP ${resp.status}`);
-      let reply = await resp.text();
-      reply = reply.trim();
+      if (!resp.ok) {
+        const errText = await resp.text();
+        throw new Error(`HTTP ${resp.status}: ${errText}`);
+      }
 
-      if (isJsonString(reply)) {
-        try {
-          const parsed = JSON.parse(reply);
-          const extracted = parsed.response || parsed.text || parsed.message || parsed.content || parsed.output || parsed.answer || parsed.result;
-          if (typeof extracted === 'string') {
-            reply = extracted;
-          } else {
-            const retryResp = await fetch('/api', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify({ prompt: fullPrompt + '\n\nIMPORTANT: Respond in plain text with markdown formatting. Do NOT respond with JSON. Give your response without any JSON wrapping.' })
-            });
-            if (retryResp.ok) {
-              let retryReply = await retryResp.text();
-              retryReply = retryReply.trim();
-              if (isJsonString(retryReply)) {
-                const rp = JSON.parse(retryReply);
-                reply = rp.response || rp.text || rp.message || rp.content || rp.output || rp.answer || rp.result || JSON.stringify(rp, null, 2);
-              } else {
-                reply = retryReply;
-              }
-            }
-          }
-        } catch (e) {}
+      const data = await resp.json();
+      let reply = extractReply(data);
+
+      if (!reply) {
+        reply = 'Sorry, I could not generate a response. Please try again.';
+      }
+
+      if (reply.toLowerCase().startsWith('assistant:') || reply.toLowerCase().startsWith('orion:')) {
+        reply = reply.substring(reply.indexOf(':') + 1).trim();
       }
 
       removeTyping();
-
-      if (reply.toLowerCase().startsWith('assistant:')) {
-        reply = reply.substring('assistant:'.length).trim();
-      }
-
       history.push({ role: 'assistant', content: reply });
       addMsg('assistant', reply, true);
       saveCurrentChat();
+
     } catch (err) {
       removeTyping();
-      addMsg('assistant', `⚠ **Error:** ${err.message}\n\nMake sure you have internet access and try again.`, true);
+      addMsg('assistant', `**Error:** ${err.message}\n\nPlease check your connection and try again.`, true);
     } finally {
       busy = false;
       sendBtn.disabled = false;
