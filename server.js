@@ -63,11 +63,18 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 async function askAI(userMessage) {
-  const url = "https://text.pollinations.ai/" + encodeURIComponent(userMessage)
-    + "?model=openai"
-    + "&system=" + encodeURIComponent(SYSTEM);
+  const response = await fetch("https://text.pollinations.ai/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      model: "openai",
+      messages: [
+        { role: "system", content: SYSTEM },
+        { role: "user", content: userMessage }
+      ]
+    })
+  });
 
-  const response = await fetch(url);
   if (!response.ok) throw new Error("HTTP " + response.status);
   const text = await response.text();
   return cleanResponse(text) || "No response received.";
@@ -76,13 +83,13 @@ async function askAI(userMessage) {
 app.get("/debug", async (req, res) => {
   const prompt = req.query.prompt || "hello";
   try {
-    const response = await fetch("https://text.pollinations.ai/openai", {
+    const response = await fetch("https://text.pollinations.ai/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: "openai",
-        stream: false,
         messages: [
+          { role: "system", content: SYSTEM },
           { role: "user", content: prompt }
         ]
       })
