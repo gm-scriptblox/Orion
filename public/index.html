@@ -1000,29 +1000,6 @@
     });
   }
 
-  function extractReply(data) {
-    if (typeof data === 'string') {
-      try {
-        const parsed = JSON.parse(data);
-        return extractReply(parsed);
-      } catch {
-        return data.trim();
-      }
-    }
-
-    if (typeof data === 'object' && data !== null) {
-      const keys = ['content', 'response', 'text', 'message', 'output', 'answer', 'result'];
-      for (const key of keys) {
-        if (typeof data[key] === 'string' && data[key].trim()) {
-          return data[key].trim();
-        }
-      }
-      return JSON.stringify(data);
-    }
-
-    return String(data).trim();
-  }
-
   function addMsg(role, content, skipHistory) {
     if (welcome.parentNode) welcome.style.display = 'none';
 
@@ -1168,8 +1145,7 @@
         throw new Error(`HTTP ${resp.status}: ${errText}`);
       }
 
-      const data = await resp.json();
-      let reply = extractReply(data);
+      let reply = await resp.text();
 
       if (!reply) {
         reply = 'Sorry, I could not generate a response. Please try again.';
@@ -1197,4 +1173,4 @@
   renderSidebar();
 </script>
 </body>
-  </html>
+                </html>
