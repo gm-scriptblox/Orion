@@ -3,6 +3,7 @@ const path = require("path");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const API_KEY = process.env["api-key"]; // Read from environment variable
 
 const SYSTEM = `You are Orion, a friendly and highly capable AI assistant.
 
@@ -61,6 +62,23 @@ function cleanResponse(text) {
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
+// Middleware to check API key if set
+function checkApiKey(req, res, next) {
+  // If no API_KEY is set in environment, allow all requests
+  if (!API_KEY) {
+    return next();
+  }
+
+  // Check for API key in header or query parameter
+  const providedKey = req.headers["x-api-key"] || req.query.apiKey;
+  
+  if (providedKey === API_KEY) {
+    return next();
+  }
+
+  return res.status(401).type("text/plain").send("Error: Invalid or missing API key.");
+}
+
 async function askAI(userMessage) {
   const response = await fetch("https://text.pollinations.ai/", {
     method: "POST",
@@ -79,7 +97,7 @@ async function askAI(userMessage) {
   return cleanResponse(text) || "No response received.";
 }
 
-app.get("/debug", async (req, res) => {
+app.get("/debug", checkApiKey, async (req, res) => {
   const prompt = req.query.prompt || "hello";
   try {
     const response = await fetch("https://text.pollinations.ai/", {
@@ -100,7 +118,7 @@ app.get("/debug", async (req, res) => {
   }
 });
 
-app.get("/api", async (req, res) => {
+app.get("/api", checkApiKey, async (req, res) => {
   if (req.query.prompt && req.query.prompt.trim()) {
     try {
       const text = await askAI(req.query.prompt.trim());
@@ -111,6 +129,77 @@ app.get("/api", async (req, res) => {
   }
 
   const origin = `https://${req.get("host")}`;
+  const authSection = API_KEY ? `
+  <div class="section-label">Authentication</div>
+  <div class="about-card" style="border-left-color:#8b6cf6">
+    <p>
+      <strong>API Key Required:</strong> This API requires authentication. Include your API key in one of two ways:
+      <br><br>
+      <strong>Header:</strong> <code style="background:#1e1e1e;padding:2px 6px;border-radius:4px;font-family:'Fira Code',monospace;color:#10a37f">X-API-Key: YOUR_API_KEY</code>
+      <br>
+      <strong>Query Param:</strong> <code style="background:#1e1e1e;padding:2px 6px;border-radius:4px;font-family:'Fira Code',monospace;color:#10a37f">?apiKey=YOUR_API_KEY</code>
+    </p>
+  </div>` : `
+  <div class="about-card" style="border-left-color:#10a37f">
+    <p>
+      <strong>No Authentication Required:</strong> This API is completely free and open. No API key needed!
+    </p>
+  </div>`;
+
+  const curlExample = API_KEY ? `curl "${origin}/api?prompt=Who+are+you" \\
+  -H "X-API-Key: YOUR_API_KEY"
+
+curl -X POST "${origin}/api" \\
+  -H "Content-Type: application/json" \\
+  -H "X-API-Key: YOUR_API_KEY" \\
+  -d '{"prompt":"Write a hello world script in Lua"}'` : `curl "${origin}/api?prompt=Who+are+you"
+
+curl -X POST "${origin}/api" \\
+  -H "Content-Type: application/json" \\
+  -d '{"prompt":"Write a hello world script in Lua"}'`;
+
+  const jsExample = API_KEY ? `const res = await fetch("${origin}/api?prompt=Explain+RemoteEvents", {
+  headers: { "X-API-Key": "YOUR_API_KEY" }
+});
+const text = await res.text();
+console.log(text);
+
+const res2 = await fetch("${origin}/api", {
+  method: "POST",
+  headers: { 
+    "Content-Type": "application/json",
+    "X-API-Key": "YOUR_API_KEY"
+  },
+  body: JSON.stringify({ prompt: "Write a Lua function" })
+});
+const text2 = await res2.text();
+console.log(text2);` : `const res = await fetch("${origin}/api?prompt=Explain+RemoteEvents");
+const text = await res.text();
+console.log(text);
+
+const res2 = await fetch("${origin}/api", {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({ prompt: "Write a Lua function" })
+});
+const text2 = await res2.text();
+console.log(text2);`;
+
+  const pythonExample = API_KEY ? `import requests
+
+headers = {"X-API-Key": "YOUR_API_KEY"}
+
+r = requests.get("${origin}/api", params={"prompt": "Who are you?"}, headers=headers)
+print(r.text)
+
+r = requests.post("${origin}/api", json={"prompt": "Explain datastores"}, headers=headers)
+print(r.text)` : `import requests
+
+r = requests.get("${origin}/api", params={"prompt": "Who are you?"})
+print(r.text)
+
+r = requests.post("${origin}/api", json={"prompt": "Explain datastores"})
+print(r.text)`;
 
   res.type("text/html").send(`<!DOCTYPE html>
 <html lang="en">
@@ -185,7 +274,8 @@ app.get("/api", async (req, res) => {
       <div class="model-badge">orion-aix model</div>
     </div>
   </div>
-  <div class="hero-sub">Free AI API — plain text responses, no authentication required.</div>
+  <div class="hero-sub">Free AI API — plain text responses${API_KEY ? ', API key required' : ', no authentication required'}.</div>
+  ${authSection}
   <div class="section-label">Endpoints</div>
   <div class="endpoint-card">
     <div class="endpoint-header">
@@ -210,11 +300,7 @@ app.get("/api", async (req, res) => {
         Copy
       </button>
     </div>
-    <pre>curl "${origin}/api?prompt=Who+are+you"
-
-curl -X POST "${origin}/api" \\
-  -H "Content-Type: application/json" \\
-  -d '{"prompt":"Write a hello world script in Lua"}'</pre>
+    <pre>${curlExample}</pre>
   </div>
   <div class="section-label">JavaScript</div>
   <div class="code-block">
@@ -225,17 +311,7 @@ curl -X POST "${origin}/api" \\
         Copy
       </button>
     </div>
-    <pre>const res = await fetch("${origin}/api?prompt=Explain+RemoteEvents");
-const text = await res.text();
-console.log(text);
-
-const res2 = await fetch("${origin}/api", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({ prompt: "Write a Lua function" })
-});
-const text2 = await res2.text();
-console.log(text2);</pre>
+    <pre>${jsExample}</pre>
   </div>
   <div class="section-label">Python</div>
   <div class="code-block">
@@ -246,13 +322,7 @@ console.log(text2);</pre>
         Copy
       </button>
     </div>
-    <pre>import requests
-
-r = requests.get("${origin}/api", params={"prompt": "Who are you?"})
-print(r.text)
-
-r = requests.post("${origin}/api", json={"prompt": "Explain datastores"})
-print(r.text)</pre>
+    <pre>${pythonExample}</pre>
   </div>
   <div class="section-label">Try It Live</div>
   <a class="try-link" href="${origin}/api?prompt=Who+are+you">${origin}/api?prompt=Who+are+you</a>
@@ -293,7 +363,7 @@ function copyCode(btn){
 </html>`);
 });
 
-app.post("/api", async (req, res) => {
+app.post("/api", checkApiKey, async (req, res) => {
   const prompt = req.body?.prompt;
   if (!prompt || !prompt.trim()) {
     return res.status(400).type("text/plain").send("Error: prompt is required.");
@@ -312,4 +382,9 @@ app.use((req, res) => {
 
 app.listen(PORT, () => {
   console.log(`Orion running → http://localhost:${PORT}`);
+  if (API_KEY) {
+    console.log(`API Key authentication: ENABLED`);
+  } else {
+    console.log(`API Key authentication: DISABLED (no api-key environment variable set)`);
+  }
 });
